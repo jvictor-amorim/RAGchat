@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server"
+import dotenv from "dotenv"
+
+dotenv.config()
+
+const backendUrl = process.env.BACKEND_URL || "http://api:8000"
 
 export async function POST(req: Request) {
   const { messages, type } = await req.json()
   const lastUserMessage = messages[messages.length - 1].content
 
   try {
-    const response = await fetch("http://localhost:8000/chat/", {
+    const response = await fetch(`${backendUrl}/chat/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -26,9 +31,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Erro ao chamar o backend:", error)
     return NextResponse.json(
-      {
-        response: "Desculpe, ocorreu um erro ao processar sua solicitação.",
-      },
+      { response: "Desculpe, ocorreu um erro ao processar sua solicitação." },
       { status: 500 }
     )
   }
